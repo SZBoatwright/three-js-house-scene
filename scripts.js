@@ -27,9 +27,16 @@ let mesh2 = new THREE.Mesh(geometry, materialLambert);
 mesh2.position.set(-200, 0, -1000);
 scene.add(mesh2);
 
+//create cloud
+let loader = new THREE.JSONLoader();
+loader.load('data/cloud1.json', handleLoad);
 
-
-//create
+function handleLoad (geometry, materials) {
+  let material = new THREE.MeshNormalMaterial();
+  let mesh = new THREE.Mesh(geometry, materials);
+  scene.add(mesh);
+  mesh.position.z = -20;
+}
 
 function render() { //renders the scene using the scene and camera objects
   mesh1.rotation.x += 0.01;
