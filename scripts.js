@@ -10,27 +10,30 @@ let scene = new THREE.Scene(); // adds in the scene
 //creates the scene lighting
 let lightAmb = new THREE.AmbientLight(0xffffff, 0.5); // creates an ambient light with the color and intensity
 scene.add(lightAmb);
+let lightAmbBlu = new THREE.AmbientLight(0x26b2de, 0.15);
+scene.add(lightAmbBlu);
 
 let lightPnt = new THREE.PointLight(0xffffff, 0.5); // creates an ambient light with the color and intensity
 scene.add(lightPnt);
 lightPnt.position.y = 100;
 lightPnt.position.x = 50;
 
-//create cloud
+//cloud spawn
 let cloudMat = new THREE.MeshLambertMaterial({color: 0xffffff}); // creates a lambert material that has shading
 
 let loader = new THREE.JSONLoader();
-loader.load('data/cloud1.json', handleLoad);
+let cloud = null;
+cloud = loader.load('data/cloud1.json', loadCloud);
+function loadCloud (geometry) {
+  let cloud = new THREE.Mesh(geometry, cloudMat);
+  scene.add(cloud);
+  cloud.position.z = -20;
+};
 
-function handleLoad (geometry, materials) {
-  let mesh = new THREE.Mesh(geometry, cloudMat);
-  scene.add(mesh);
-  mesh.position.z = -20;
-}
 
 // render the scene
 function render() { // renders the scene using the scene and camera objects
   renderer.render (scene, camera);
   requestAnimationFrame(render);
-} 
+};
 render();
