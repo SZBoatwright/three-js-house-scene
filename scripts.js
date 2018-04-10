@@ -8,6 +8,8 @@ let cloud;
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 const CLOUD_MAT = new THREE.MeshLambertMaterial({color: 0xffffff});
+const SPEED_MIN = 0.003;
+const SPEED_MAX = 0.0075;
 
 // Init Scene
 function init() {
@@ -52,9 +54,18 @@ function initCloud() {
   });
 }
 
+function moveCloud() {
+  if (!cloud) {
+    return;
+  }
+  cloud.position.x -= SPEED_MIN;
+}
+
 function render() {
   requestAnimationFrame(render);
   // Animation stuff
+  moveCloud();
+
   renderer.render (scene, camera);
 }
 
