@@ -7,8 +7,8 @@ let renderer;
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 const CLOUD_MAT = new THREE.MeshLambertMaterial({color: 0xffffff});
-const SPEED_MIN = 0.003;
-const SPEED_MAX = 0.0075;
+const SPEED_MIN = 3;
+const SPEED_MAX = 75;
 
 // Init Scene
 function init() {
@@ -49,6 +49,10 @@ function initCloud() {
   var loader = new THREE.JSONLoader();
   loader.load('./data/cloud1.json',function(geometry) {
     let mesh = new THREE.Mesh(geometry, CLOUD_MAT);
+
+    // Give the cloud a random speed between MIN_SPEED and MAX_SPEED
+    mesh["speed"] = getRandomInt(SPEED_MIN, SPEED_MAX) * 0.0001;
+
     scene.add(mesh);
   });
 }
@@ -56,9 +60,14 @@ function initCloud() {
 function moveClouds () {
   scene.children.forEach(function(curVal, i){
     if (scene.children[i]["type"] == "Mesh") {
-      scene.children[i].position.x -= 0.002;
+      // Moves the cloud based on assigned speed
+      scene.children[i].position.x -= scene.children[i].speed;
     }
   })
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function render() {
