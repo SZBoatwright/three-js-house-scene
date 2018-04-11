@@ -2,7 +2,6 @@
 let scene;
 let camera;
 let renderer;
-let cloudMesh;
 
 // Constants
 const WIDTH = window.innerWidth;
@@ -46,33 +45,26 @@ function initRenderer() {
   renderer.setPixelRatio(window.devicePixelRatio); // sets the pixel ratio to be the size of the screen
 }
 
-// Cloud Constructor 
-function cloud() {
-  this.positionX = 0;
-  this.positionY = 0;
-  this.positionZ = 0;
-  this.mesh = initCloud();
-}
-
 function initCloud() {
   var loader = new THREE.JSONLoader();
   loader.load('./data/cloud1.json',function(geometry) {
-    cloudMesh = new THREE.Mesh(geometry, CLOUD_MAT);
-    scene.add(cloudMesh);
+    let mesh = new THREE.Mesh(geometry, CLOUD_MAT);
+    scene.add(mesh);
   });
 }
 
-function moveCloud() {
-  if (!cloud) {
-    return;
-  }
-  cloudMesh.position.x -= SPEED_MIN;
+function moveClouds () {
+  scene.children.forEach(function(curVal, i){
+    if (scene.children[i]["type"] == "Mesh") {
+      scene.children[i].position.x -= 0.002;
+    }
+  })
 }
 
 function render() {
   requestAnimationFrame(render);
   // Animation stuff
-  moveCloud();
+  moveClouds();
 
   renderer.render (scene, camera);
 }
