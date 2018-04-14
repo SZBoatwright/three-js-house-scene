@@ -15,6 +15,9 @@ const SPEED_MAX = 75;
 const CLOUD_CLOSE = 1;
 const CLOUD_FAR = -3.25;
 const CLOUD_HEIGHT = 3;
+const CLOUD_HORIZONTAL = 13;
+const SCALE_MAX = 125;
+const SCALE_MIN = 75;
 
 // Scene Lighting
 const LIGHT_POINT = new THREE.PointLight(0xffffff, 0.5); // creates an ambient light with the color and intensity
@@ -63,8 +66,15 @@ function initCloud() {
 
     scene.add(mesh);
 
+    // Mesh position
     mesh.position.z = getRandomInt(CLOUD_FAR, CLOUD_CLOSE);
     mesh.position.y = getRandomInt(-CLOUD_HEIGHT, CLOUD_HEIGHT);
+    mesh.position.x = getRandomInt(-CLOUD_HORIZONTAL, CLOUD_HORIZONTAL);
+
+    // Mesh scale
+    mesh.scale.x = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
+    mesh.scale.y = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
+    mesh.scale.z = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
   });
 }
 
