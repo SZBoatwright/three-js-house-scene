@@ -9,8 +9,12 @@ const HEIGHT = window.innerHeight;
 
 const CLOUD_MAT = new THREE.MeshLambertMaterial({ color: 0xffffff });
 
+// Scene variables
 const SPEED_MIN = 3;
 const SPEED_MAX = 75;
+const CLOUD_CLOSE = 1;
+const CLOUD_FAR = -3.25;
+const CLOUD_HEIGHT = 3;
 
 // Scene Lighting
 const LIGHT_POINT = new THREE.PointLight(0xffffff, 0.5); // creates an ambient light with the color and intensity
@@ -58,6 +62,9 @@ function initCloud() {
     mesh["speed"] = getRandomInt(SPEED_MIN, SPEED_MAX) * 0.0001;
 
     scene.add(mesh);
+
+    mesh.position.z = getRandomInt(CLOUD_FAR, CLOUD_CLOSE);
+    mesh.position.y = getRandomInt(-CLOUD_HEIGHT, CLOUD_HEIGHT);
   });
 }
 
