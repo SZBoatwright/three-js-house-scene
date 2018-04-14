@@ -14,10 +14,17 @@ const SPEED_MIN = 3;
 const SPEED_MAX = 75;
 const CLOUD_CLOSE = 1;
 const CLOUD_FAR = -3.25;
-const CLOUD_HEIGHT = 3;
+const CLOUD_VERTICAL = 3;
 const CLOUD_HORIZONTAL = 13;
 const SCALE_MAX = 125;
 const SCALE_MIN = 75;
+const CLOUDS_SPAWN_AMNT = 10;
+
+let cloudSpawnPositions = ["", "", "", "", "", "", "", "", "", ""];
+cloudSpawnPositions.forEach(function(curVal, i) {
+  cloudSpawnPositions[i] = getRandomInt(-CLOUD_HORIZONTAL, CLOUD_HORIZONTAL);
+});
+console.log(cloudSpawnPositions);
 
 // Scene Lighting
 const LIGHT_POINT = new THREE.PointLight(0xffffff, 0.5); // creates an ambient light with the color and intensity
@@ -68,14 +75,21 @@ function initCloud() {
 
     // Mesh position
     mesh.position.z = getRandomInt(CLOUD_FAR, CLOUD_CLOSE);
-    mesh.position.y = getRandomInt(-CLOUD_HEIGHT, CLOUD_HEIGHT);
-    mesh.position.x = getRandomInt(-CLOUD_HORIZONTAL, CLOUD_HORIZONTAL);
+    mesh.position.y = getRandomInt(-CLOUD_VERTICAL, CLOUD_VERTICAL);
 
     // Mesh scale
     mesh.scale.x = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
     mesh.scale.y = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
     mesh.scale.z = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
   });
+}
+
+function cloudsInitialInit() {
+  for (i = 0; i < 10; i++) {
+    initCloud();
+    scene.children[scene.children.length - 1].position.x =
+      cloudSpawnPositions[i];
+  }
 }
 
 function moveClouds() {
