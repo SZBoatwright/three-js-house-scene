@@ -63,7 +63,8 @@ function initRenderer() {
   renderer.setPixelRatio(window.devicePixelRatio); // sets the pixel ratio to be the size of the screen
 }
 
-function initCloud() {
+function initCloud(isXRandom) {
+  let rand = isXRandom;
   var loader = new THREE.JSONLoader();
   loader.load("./data/cloud1.json", function(geometry) {
     let mesh = new THREE.Mesh(geometry, CLOUD_MAT);
@@ -72,10 +73,13 @@ function initCloud() {
     mesh["speed"] = getRandomInt(SPEED_MIN, SPEED_MAX) * 0.0001;
 
     scene.add(mesh);
-
     // Mesh position
     mesh.position.z = getRandomInt(CLOUD_FAR, CLOUD_CLOSE);
     mesh.position.y = getRandomInt(-CLOUD_VERTICAL, CLOUD_VERTICAL);
+    if (rand == true) {
+      mesh.position.x = getRandomInt(-CLOUD_HORIZONTAL, CLOUD_HORIZONTAL);
+      console.log ("it ran");
+    }
 
     // Mesh scale
     mesh.scale.x = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
@@ -86,9 +90,7 @@ function initCloud() {
 
 function cloudsInitialInit() {
   for (i = 0; i < 10; i++) {
-    initCloud();
-    scene.children[scene.children.length - 1].position.x =
-      cloudSpawnPositions[i];
+    initCloud(true);
   }
 }
 
