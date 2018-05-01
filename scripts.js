@@ -10,14 +10,14 @@ const HEIGHT = window.innerHeight;
 const CLOUD_MAT = new THREE.MeshLambertMaterial({ color: 0xffffff });
 
 // Scene variables
-const SPEED_MIN = 3;
+const SPEED_MIN = 30;
 const SPEED_MAX = 75;
 const CLOUD_CLOSE = 1;
 const CLOUD_FAR = -3.25;
 const CLOUD_VERTICAL = 3;
 const CLOUD_HORIZONTAL = 13;
-const SCALE_MAX = 125;
-const SCALE_MIN = 75;
+const SQUISH_MAX = 100;
+const SQUISH_MIN = 75;
 const CLOUDS_SPAWN_AMNT = 10;
 
 let cloudSpawnPositions = ["", "", "", "", "", "", "", "", "", ""];
@@ -36,7 +36,7 @@ function init() {
   scene = new THREE.Scene();
   initCamera();
   initRenderer();
-  initCloud();
+  cloudsInitialInit();
 
   // Adds the scene lighting
   scene.add(LIGHT_AMB);
@@ -46,7 +46,7 @@ function init() {
   LIGHT_POINT.position.y = 100;
   LIGHT_POINT.position.x = 50;
 
-  document.body.appendChild(renderer.domElement); // Adds in WebGL renderer
+  document.querySelector('#cloudBox').appendChild(renderer.domElement); // Adds in WebGL renderer
 }
 
 // Functions
@@ -80,16 +80,19 @@ function initCloud(isXRandom) {
       mesh.position.x = getRandomInt(-CLOUD_HORIZONTAL, CLOUD_HORIZONTAL);
       console.log ("it ran");
     }
+    else {
+      mesh.position.x = CLOUD_HORIZONTAL;
+    }
 
     // Mesh scale
-    mesh.scale.x = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
-    mesh.scale.y = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
-    mesh.scale.z = getRandomInt(SCALE_MIN, SCALE_MAX) * 0.01;
+    mesh.scale.x = getRandomInt(SQUISH_MIN, SQUISH_MAX) * 0.01;
+    mesh.scale.y = getRandomInt(SQUISH_MIN, SQUISH_MAX) * 0.01;
+    mesh.scale.z = getRandomInt(SQUISH_MIN, SQUISH_MAX) * 0.01;
   });
 }
 
 function cloudsInitialInit() {
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < CLOUDS_SPAWN_AMNT; i++) {
     initCloud(true);
   }
 }
@@ -99,8 +102,16 @@ function moveClouds() {
     if (scene.children[i]["type"] == "Mesh") {
       // Moves the cloud based on assigned speed
       scene.children[i].position.x -= scene.children[i].speed;
+      respawnCloud(i);
     }
   });
+}
+
+function respawnCloud(i) {
+  if (scene.children[i].position.x < -CLOUD_HORIZONTAL) {
+    scene.children.splice(i,1);
+    initCloud();
+  }
 }
 
 function getRandomInt(min, max) {
